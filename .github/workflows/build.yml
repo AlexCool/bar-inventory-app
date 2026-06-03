@@ -16,10 +16,9 @@ jobs:
 
       - name: Build APK
         run: |
-          # Указываем Buildozer'у правильный путь к sdkmanager
-          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
-          export ANDROID_HOME=$ANDROID_SDK_ROOT
-          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+          # Создаем символическую ссылку, чтобы обмануть Buildozer
+          mkdir -p /usr/local/lib/android/sdk/tools/bin
+          ln -s /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /usr/local/lib/android/sdk/tools/bin/sdkmanager
           
           # Запускаем сборку
           buildozer android debug
