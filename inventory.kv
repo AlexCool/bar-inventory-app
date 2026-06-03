@@ -1,0 +1,232 @@
+ScreenManager:
+    MenuScreen:
+    IngredientsScreen:
+    PremixesScreen:
+    HistoryScreen:
+    CalculatorScreen:
+
+# 1. ГЛАВНОЕ МЕНЮ
+<MenuScreen>:
+    name: 'menu'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: "20dp"
+        spacing: "16dp"
+
+        MDLabel:
+            text: "УЧЁТ БАРА"
+            halign: "center"
+            font_style: "H4"
+            theme_text_color: "Custom"
+            text_color: 0.0, 0.8, 0.7, 1
+            size_hint_y: None
+            height: "70dp"
+
+        MDFillRoundFlatButton:
+            text: "Склад Сырья (Ингредиенты)"
+            font_size: "16sp"
+            size_hint: (1, 0.15)
+            md_bg_color: 0.15, 0.18, 0.22, 1
+            on_release: root.manager.current = 'ingredients'
+
+        MDFillRoundFlatButton:
+            text: "Склад Заготовок (Премиксы)"
+            font_size: "16sp"
+            size_hint: (1, 0.15)
+            md_bg_color: 0.15, 0.18, 0.22, 1
+            on_release: root.manager.current = 'premixes'
+
+        MDFillRoundFlatButton:
+            text: "Конструктор Техкарт"
+            font_size: "16sp"
+            size_hint: (1, 0.15)
+            md_bg_color: 0.0, 0.45, 0.45, 1
+            on_release: root.manager.current = 'calculator'
+
+        MDFillRoundFlatButton:
+            text: "История и Логи"
+            font_size: "16sp"
+            size_hint: (1, 0.15)
+            md_bg_color: 0.15, 0.18, 0.22, 1
+            on_release: root.manager.current = 'history'
+
+# 2. ЭКРАН ИНГРЕДИЕНТОВ
+<IngredientsScreen>:
+    name: 'ingredients'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: "10dp"
+        spacing: "10dp"
+        BoxLayout:
+            size_hint_y: None
+            height: "50dp"
+            MDIconButton:
+                icon: "arrow-left"
+                on_release: root.manager.current = 'menu'
+            MDLabel:
+                text: "Склад сырья"
+                font_style: "H5"
+        ScrollView:
+            BoxLayout:
+                id: ingredients_container
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: "8dp"
+
+# 3. ЭКРАН ЗАГОТОВОК
+<PremixesScreen>:
+    name: 'premixes'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: "10dp"
+        spacing: "10dp"
+        BoxLayout:
+            size_hint_y: None
+            height: "50dp"
+            MDIconButton:
+                icon: "arrow-left"
+                on_release: root.manager.current = 'menu'
+            MDLabel:
+                text: "Склад заготовок"
+                font_style: "H5"
+        ScrollView:
+            BoxLayout:
+                id: premixes_container
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: "8dp"
+
+# 4. ЭКРАН КОНСТРУКТОРА ТЕХКАРТ
+<CalculatorScreen>:
+    name: 'calculator'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: "12dp"
+        spacing: "8dp"
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: "45dp"
+            MDIconButton:
+                icon: "arrow-left"
+                on_release: root.manager.current = 'menu'
+            MDLabel:
+                text: "Конструктор Позиций"
+                font_style: "H5"
+
+        MDFillRoundFlatButton:
+            text: "Добавить новый Ингредиент"
+            size_hint_x: 1
+            size_hint_y: None
+            height: "40dp"
+            md_bg_color: 0.1, 0.55, 0.3, 1
+            on_release: app.show_new_ingredient_dialog()
+
+        MDSeparator:
+            size_hint_y: None
+            height: "1dp"
+
+        MDLabel:
+            text: "Параметры заготовки:"
+            font_style: "Subtitle2"
+            size_hint_y: None
+            height: "20dp"
+            theme_text_color: "Custom"
+            text_color: 0.0, 0.8, 0.7, 1
+
+        MDLabel:
+            text: "Название заготовки:"
+            font_style: "Caption"
+            theme_text_color: "Secondary"
+            size_hint_y: None
+            height: "14dp"
+        TextInput:
+            id: new_mix_name
+            hint_text: "Например: Кордиал Лайм"
+            text: ""
+            multiline: False
+            size_hint_y: None
+            height: "36dp"
+            font_size: "15sp"
+            background_color: (0.18, 0.22, 0.25, 1)
+            foreground_color: (1, 1, 1, 1)
+            padding: ["10dp", "6dp", "10dp", "6dp"]
+
+        MDLabel:
+            text: "Выход заготовки в литрах:"
+            font_style: "Caption"
+            theme_text_color: "Secondary"
+            size_hint_y: None
+            height: "14dp"
+        TextInput:
+            id: new_mix_output
+            hint_text: "Например: 1"
+            text: "1"
+            multiline: False
+            input_filter: "float"
+            size_hint_y: None
+            height: "36dp"
+            font_size: "15sp"
+            background_color: (0.18, 0.22, 0.25, 1)
+            foreground_color: (1, 1, 1, 1)
+            padding: ["10dp", "6dp", "10dp", "6dp"]
+
+        # ИЗМЕНЕНО: Теперь подсказка четко указывает на КГ / Л
+        MDLabel:
+            text: "Внесите количество (кг/л):"
+            font_style: "Caption"
+            theme_text_color: "Secondary"
+            size_hint_y: None
+            height: "16dp"
+
+        # Скролл-зона для ингредиентов
+        ScrollView:
+            BoxLayout:
+                id: recipe_builder_container
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: "8dp"
+
+        # Кнопка сохранения
+        MDFillRoundFlatButton:
+            text: "СОХРАНИТЬ ТЕХКАРТУ"
+            size_hint_x: 1
+            size_hint_y: None
+            height: "45dp"
+            md_bg_color: 0.0, 0.55, 0.65, 1
+            on_release: app.save_new_premix_recipe()
+
+# 5. ЭКРАН ИСТОРИИ
+<HistoryScreen>:
+    name: 'history'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: "10dp"
+        spacing: "10dp"
+        BoxLayout:
+            size_hint_y: None
+            height: "50dp"
+            MDIconButton:
+                icon: "arrow-left"
+                on_release: root.manager.current = 'menu'
+            MDLabel:
+                text: "Журнал логов"
+                font_style: "H5"
+        ScrollView:
+            MDLabel:
+                id: history_text
+                text: ""
+                font_style: "Body2"
+                size_hint_y: None
+                height: self.texture_size[1]
+        MDFillRoundFlatButton:
+            text: "ОТМЕНИТЬ ПОСЛЕДНЕЕ ДЕЙСТВИЕ"
+            pos_hint: {"center_x": .5}
+            md_bg_color: 0.7, 0.15, 0.15, 1
+            size_hint_y: None
+            height: "45dp"
+            on_release: app.undo_action()
