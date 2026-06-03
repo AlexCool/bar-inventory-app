@@ -16,16 +16,20 @@ jobs:
 
       - name: Build APK
         run: |
-          # Принудительно отключаем попытки Buildozer'а лезть в SDK
-          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
-          export ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/27.3.13750724
+          # 1. Создаем структуру папок, которую Buildozer ищет по ошибке
+          mkdir -p /usr/local/lib/android/sdk/tools/bin
           
-          # Запуск сборки
-          buildozer -v android debug
+          # 2. Создаем "мост" (символическую ссылку) к правильному sdkmanager
+          # В Ubuntu 24.04 он лежит в cmdline-tools
+          ln -s /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /usr/local/lib/android/sdk/tools/bin/sdkmanager
+          
+          # 3. Добавляем путь в PATH для верности
+          export PATH=$PATH:/usr/local/lib/android/sdk/cmdline-tools/latest/bin
+          
+          # 4. Запускаем сборку
+          buildozer android debug
         env:
-          # Отключаем авто-принятие и авто-скачивание
           BUILDOZER_ALLOW_SDK_ACCEPT: "1"
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
