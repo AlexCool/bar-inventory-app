@@ -15,9 +15,15 @@ jobs:
           pip install buildozer cython==0.29.33
 
       - name: Build APK
-        run: buildozer android debug
+        run: |
+          # Указываем Buildozer'у правильный путь к sdkmanager
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+          export ANDROID_HOME=$ANDROID_SDK_ROOT
+          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+          
+          # Запускаем сборку
+          buildozer android debug
         env:
-          # Переменная, чтобы Buildozer не пытался лезть в интернет за SDK
           BUILDOZER_ALLOW_SDK_ACCEPT: "1"
 
       - name: Upload artifacts
