@@ -12,23 +12,18 @@ jobs:
         with:
           python-version: '3.10'
           
+      - name: Cache Buildozer
+        uses: actions/cache@v4
+        with:
+          path: .buildozer
+          key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip git zip unzip openjdk-17-jdk-headless autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
+          sudo apt-get install -y python3-pip git zip unzip openjdk-17-jdk-headless autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
-
-      - name: Accept Android Licenses
-        run: |
-          # Создаем папку для лицензий
-          mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
-          # Принудительно создаем файл принятых лицензий
-          mkdir -p $ANDROID_HOME/licenses
-          echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
-          echo "d56f5187473751e9f1a877a3606bd3cd69356d0d" >> $ANDROID_HOME/licenses/android-sdk-license
-          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> $ANDROID_HOME/licenses/android-sdk-license
 
       - name: Build with Buildozer
         run: buildozer android debug
