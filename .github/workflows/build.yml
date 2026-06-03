@@ -16,13 +16,14 @@ jobs:
 
       - name: Build APK
         run: |
-          # Создаем символическую ссылку, чтобы обмануть Buildozer
-          mkdir -p /usr/local/lib/android/sdk/tools/bin
-          ln -s /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /usr/local/lib/android/sdk/tools/bin/sdkmanager
+          # Принудительно отключаем попытки Buildozer'а лезть в SDK
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+          export ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/27.3.13750724
           
-          # Запускаем сборку
-          buildozer android debug
+          # Запуск сборки
+          buildozer -v android debug
         env:
+          # Отключаем авто-принятие и авто-скачивание
           BUILDOZER_ALLOW_SDK_ACCEPT: "1"
 
       - name: Upload artifacts
