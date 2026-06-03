@@ -19,18 +19,16 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
 
-      - name: Setup Android SDK and Accept Licenses
+      - name: Prepare Buildozer
         run: |
-          # Устанавливаем переменные окружения
-          export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
-          # Принимаем лицензии через официальный инструмент
-          mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
-          # Используем команду sdkmanager для принятия всех лицензий
-          yes | sdkmanager --licenses > /dev/null || true
+          # Запускаем подготовку, которая скачает SDK
+          # Мы используем 'yes |' чтобы он сам прожал все лицензии при установке
+          yes | buildozer android debug || true
 
-      - name: Build with Buildozer
-        run: buildozer android debug
+      - name: Build APK
+        run: |
+          # Теперь, когда SDK скачан и лицензии приняты, запускаем основную сборку
+          buildozer android debug
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
