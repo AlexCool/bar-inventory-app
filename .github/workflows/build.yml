@@ -12,12 +12,6 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Cache Buildozer
-        uses: actions/cache@v4
-        with:
-          path: .buildozer
-          key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
-
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -25,18 +19,18 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
 
-      - name: Build with Buildozer
+      - name: Setup Android SDK and Accept Licenses
         run: |
-          # Создаем папку для лицензий
+          # Устанавливаем переменные окружения
+          export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
+          # Принимаем лицензии через официальный инструмент
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          
-          # Устанавливаем SDK-manager и принимаем лицензии официально
-          export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          
-          # Запускаем сборку
-          buildozer android debug
+          # Используем команду sdkmanager для принятия всех лицензий
+          yes | sdkmanager --licenses > /dev/null || true
+
+      - name: Build with Buildozer
+        run: buildozer android debug
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
