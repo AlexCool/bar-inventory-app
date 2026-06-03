@@ -27,10 +27,16 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Автоматически принимаем лицензии перед запуском сборки
+          # Создаем папку для лицензий
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          yes | buildozer android debug
+          
+          # Устанавливаем SDK-manager и принимаем лицензии официально
+          export ANDROID_HOME=/home/runner/.buildozer/android/platform/android-sdk
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          
+          # Запускаем сборку
+          buildozer android debug
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
